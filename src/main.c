@@ -83,10 +83,10 @@ void drl_send_heartbeat_if_needed(can_data_t *can, uint8_t status)
 
 void drl_activate(can_msg_t *msg)
 {
-	uint32_t t = ((uint32_t)msg->data[0] << 24) |
-				 ((uint32_t)msg->data[1] << 16) |
-				 ((uint32_t)msg->data[2] <<  8) |
-				 ((uint32_t)msg->data[3] << 0);
+	uint32_t t = ((uint32_t)msg->data[0] <<  0) |
+				 ((uint32_t)msg->data[1] <<  8) |
+				 ((uint32_t)msg->data[2] << 16) |
+				 ((uint32_t)msg->data[3] << 24);
 
 	if (t==0)
 	{
@@ -136,8 +136,8 @@ static void MX_GPIO_Init(void)
 	GPIO_InitTypeDef GPIO_InitStruct;
 	__HAL_RCC_GPIOF_CLK_ENABLE();
 	__HAL_RCC_GPIOA_CLK_ENABLE();
-	HAL_GPIO_WritePin(GPIOA, LED_Pin|DUMMRUM_Pin, GPIO_PIN_RESET);
-	GPIO_InitStruct.Pin = LED_Pin|DUMMRUM_Pin;
+	HAL_GPIO_WritePin(GPIOA, LED_Pin|DUMMRUM_Pin|CANS_Pin, GPIO_PIN_RESET);
+	GPIO_InitStruct.Pin = LED_Pin|DUMMRUM_Pin|CANS_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

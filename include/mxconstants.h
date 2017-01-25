@@ -45,6 +45,8 @@
 #define LED_GPIO_Port GPIOA
 #define DUMMRUM_Pin GPIO_PIN_1
 #define DUMMRUM_GPIO_Port GPIOA
+#define CANS_Pin GPIO_PIN_8
+#define CANS_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
