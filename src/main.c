@@ -22,8 +22,9 @@ int main(void)
 	HAL_Init();
 	SystemClock_Config();
 	MX_GPIO_Init();
-	HAL_GPIO_WritePin(GPIOA, LED_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOA, DUMMRUM_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(DUMMRUM_GPIO_Port, DUMMRUM_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(CANS_GPIO_Port, CANS_Pin, GPIO_PIN_RESET);
 
 	can_data_t can0;
 	can_msg_t msg;
@@ -38,11 +39,11 @@ int main(void)
 		uint8_t drl_status = (drl_active_until >= HAL_GetTick()) ? 1 : 0;
 		if (drl_status)
 		{
-			HAL_GPIO_WritePin(GPIOA, LED_Pin, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(GPIOA, DUMMRUM_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(DUMMRUM_GPIO_Port, DUMMRUM_Pin, GPIO_PIN_SET);
 		} else {
-			HAL_GPIO_WritePin(GPIOA, LED_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(GPIOA, DUMMRUM_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(DUMMRUM_GPIO_Port, DUMMRUM_Pin, GPIO_PIN_RESET);
 		}
 
 		drl_send_heartbeat_if_needed(&can0, drl_status);
@@ -136,12 +137,25 @@ static void MX_GPIO_Init(void)
 	GPIO_InitTypeDef GPIO_InitStruct;
 	__HAL_RCC_GPIOF_CLK_ENABLE();
 	__HAL_RCC_GPIOA_CLK_ENABLE();
-	HAL_GPIO_WritePin(GPIOA, LED_Pin|DUMMRUM_Pin|CANS_Pin, GPIO_PIN_RESET);
-	GPIO_InitStruct.Pin = LED_Pin|DUMMRUM_Pin|CANS_Pin;
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+
+	HAL_GPIO_WritePin(CANS_GPIO_Port, CANS_Pin, GPIO_PIN_RESET);
+
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	HAL_GPIO_WritePin(DUMMRUM_GPIO_Port, DUMMRUM_Pin, GPIO_PIN_RESET);
+	GPIO_InitStruct.Pin = DUMMRUM_Pin;
+	HAL_GPIO_Init(DUMMRUM_GPIO_Port, &GPIO_InitStruct);
+
+	HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+	GPIO_InitStruct.Pin = LED_Pin;
+	HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+
+	HAL_GPIO_WritePin(CANS_GPIO_Port, CANS_Pin, GPIO_PIN_RESET);
+	GPIO_InitStruct.Pin = CANS_Pin;
+	HAL_GPIO_Init(CANS_GPIO_Port, &GPIO_InitStruct);
 }
 
 void Error_Handler(void)

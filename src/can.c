@@ -104,7 +104,6 @@ void can_enable(can_data_t *hcan, bool loop_back, bool listen_only, bool one_sho
 	can->FFA1R &= ~filter_bit;       // assign filter 0 to FIFO 0
 	can->FA1R |= filter_bit;         // enable filter
 	can->FMR &= ~CAN_FMR_FINIT;
-
 }
 
 void can_disable(can_data_t *hcan)
